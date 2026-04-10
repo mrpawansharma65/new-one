@@ -1,0 +1,1535 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Starbucks Nutrition Calculator – Track Calories, Protein & Macros</title>
+<meta name="description" content="Free Starbucks Nutrition Calculator. Track calories, protein, carbs, and fat in every Starbucks item. Real-time updates, no signup required.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --orange: #E8600A;
+    --orange-light: #FFF4EE;
+    --orange-mid: #F97316;
+    --green: #2D7A3A;
+    --green-light: #EAF5EC;
+    --white: #FFFFFF;
+    --off-white: #FAFAF8;
+    --gray-50: #F8F8F6;
+    --gray-100: #F0EFE9;
+    --gray-200: #E2E1DA;
+    --gray-400: #9B9A93;
+    --gray-600: #5C5B55;
+    --gray-900: #1A1916;
+    --radius-sm: 10px;
+    --radius-md: 16px;
+    --radius-lg: 24px;
+    --radius-xl: 32px;
+    --shadow-sm: 0 2px 8px rgba(0,0,0,0.06);
+    --shadow-md: 0 4px 20px rgba(0,0,0,0.08);
+    --shadow-lg: 0 8px 40px rgba(0,0,0,0.10);
+    --transition: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--white);
+    color: var(--gray-900);
+    font-size: 16px;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ── HEADER ── */
+  .header {
+    position: sticky; top: 0; z-index: 100;
+    background: var(--white);
+    border-bottom: 1px solid var(--gray-100);
+    padding: 0 24px;
+  }
+  .header-inner {
+    max-width: 1200px; margin: 0 auto;
+    display: flex; align-items: center; justify-content: space-between;
+    height: 64px; gap: 24px;
+  }
+  .logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+  .logo-icon {
+    width: 36px; height: 36px; background: var(--orange);
+    border-radius: 10px; display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+  }
+  .logo-text { font-size: 14px; font-weight: 600; color: var(--gray-900); line-height: 1.2; }
+  .logo-text span { color: var(--orange); display: block; }
+  nav { display: flex; gap: 4px; align-items: center; }
+  nav a {
+    text-decoration: none; color: var(--gray-600);
+    font-size: 14px; font-weight: 500;
+    padding: 6px 14px; border-radius: 8px;
+    transition: background var(--transition), color var(--transition);
+  }
+  nav a:hover { background: var(--gray-50); color: var(--gray-900); }
+  .header-actions { display: flex; align-items: center; gap: 10px; }
+  .theme-toggle {
+    width: 34px; height: 34px; border-radius: 8px;
+    border: 1px solid var(--gray-200); background: var(--white);
+    cursor: pointer; display: flex; align-items: center; justify-content: center;
+    font-size: 15px; transition: background var(--transition);
+  }
+  .theme-toggle:hover { background: var(--gray-50); }
+  .btn-primary {
+    background: var(--orange); color: var(--white);
+    border: none; padding: 10px 20px; border-radius: 10px;
+    font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 600;
+    cursor: pointer; transition: background var(--transition), transform var(--transition);
+    text-decoration: none; display: inline-flex; align-items: center; gap: 6px;
+    min-height: 44px;
+  }
+  .btn-primary:hover { background: #C9510A; transform: translateY(-1px); }
+  .btn-primary:active { transform: translateY(0) scale(0.98); }
+
+  /* ── HERO ── */
+  .hero {
+    background: linear-gradient(135deg, #FFF8F4 0%, #FFF4EE 50%, #FFF9F6 100%);
+    padding: 80px 24px 70px;
+    position: relative; overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute; top: -80px; right: -80px;
+    width: 400px; height: 400px;
+    background: radial-gradient(circle, rgba(232,96,10,0.08) 0%, transparent 70%);
+    border-radius: 50%; pointer-events: none;
+  }
+  .hero-inner {
+    max-width: 1200px; margin: 0 auto;
+    display: grid; grid-template-columns: 1fr 380px; gap: 64px; align-items: center;
+  }
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: var(--white); border: 1px solid var(--gray-200);
+    border-radius: 100px; padding: 6px 14px;
+    font-size: 13px; font-weight: 500; color: var(--orange);
+    margin-bottom: 20px;
+  }
+  .hero-badge::before { content: '●'; font-size: 8px; }
+  .hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(36px, 5vw, 58px);
+    font-weight: 700; line-height: 1.1;
+    color: var(--gray-900); margin-bottom: 20px;
+  }
+  .hero h1 span { color: var(--orange); }
+  .hero p { font-size: 18px; color: var(--gray-600); max-width: 480px; margin-bottom: 32px; line-height: 1.7; }
+  .hero-cta { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
+  .btn-secondary {
+    background: var(--white); color: var(--gray-900);
+    border: 1.5px solid var(--gray-200); padding: 10px 20px; border-radius: 10px;
+    font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 600;
+    cursor: pointer; transition: all var(--transition);
+    text-decoration: none; display: inline-flex; align-items: center; gap: 6px;
+    min-height: 44px;
+  }
+  .btn-secondary:hover { border-color: var(--orange); color: var(--orange); background: var(--orange-light); }
+  .hero-stats { display: flex; gap: 32px; margin-top: 36px; }
+  .hero-stat { }
+  .hero-stat-num { font-size: 22px; font-weight: 700; color: var(--orange); display: block; }
+  .hero-stat-label { font-size: 13px; color: var(--gray-400); }
+  .hero-image { position: relative; display: flex; justify-content: center; }
+  .hero-cup {
+    width: 220px; height: 280px;
+    background: linear-gradient(160deg, #F97316 0%, #E8600A 60%, #C9510A 100%);
+    border-radius: 30px 30px 40px 40px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 80px; position: relative; box-shadow: var(--shadow-lg);
+  }
+  .hero-float-card {
+    position: absolute; background: var(--white);
+    border-radius: var(--radius-md); padding: 12px 16px;
+    box-shadow: var(--shadow-md); font-size: 13px; font-weight: 600;
+  }
+  .hero-float-card.top { top: 20px; right: -20px; }
+  .hero-float-card.bottom { bottom: 30px; left: -30px; }
+  .hero-float-card .num { font-size: 20px; color: var(--orange); display: block; }
+
+  /* ── SECTION WRAPPER ── */
+  section { padding: 80px 24px; }
+  .section-inner { max-width: 1200px; margin: 0 auto; }
+  .section-label {
+    font-size: 12px; font-weight: 600; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--orange);
+    margin-bottom: 10px; display: block;
+  }
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(26px, 3.5vw, 38px); font-weight: 700;
+    color: var(--gray-900); margin-bottom: 16px; line-height: 1.2;
+  }
+  .section-desc { font-size: 17px; color: var(--gray-600); max-width: 600px; line-height: 1.7; }
+
+  /* ── CALCULATOR + MENU ── */
+  .calculator-section { background: var(--gray-50); }
+  .calculator-layout {
+    display: grid; grid-template-columns: 1fr 340px; gap: 32px; align-items: start;
+  }
+  .menu-panel, .summary-panel {
+    background: var(--white); border-radius: var(--radius-lg);
+    border: 1px solid var(--gray-200); overflow: hidden;
+    box-shadow: var(--shadow-sm);
+  }
+  .panel-header {
+    padding: 20px 24px 16px;
+    border-bottom: 1px solid var(--gray-100);
+  }
+  .panel-title { font-size: 17px; font-weight: 600; color: var(--gray-900); }
+  .search-bar {
+    position: relative; margin: 16px 24px 0;
+  }
+  .search-bar input {
+    width: 100%; padding: 11px 16px 11px 40px;
+    border: 1.5px solid var(--gray-200); border-radius: var(--radius-sm);
+    font-family: 'DM Sans', sans-serif; font-size: 14px; color: var(--gray-900);
+    background: var(--white); outline: none;
+    transition: border-color var(--transition);
+  }
+  .search-bar input:focus { border-color: var(--orange); }
+  .search-icon {
+    position: absolute; left: 14px; top: 50%; transform: translateY(-50%);
+    color: var(--gray-400); font-size: 14px;
+  }
+  .category-tabs {
+    display: flex; gap: 8px; padding: 16px 24px;
+    overflow-x: auto; scrollbar-width: none;
+  }
+  .category-tabs::-webkit-scrollbar { display: none; }
+  .cat-tab {
+    display: flex; align-items: center; gap: 6px;
+    padding: 7px 14px; border-radius: 100px;
+    border: 1.5px solid var(--gray-200); font-size: 13px; font-weight: 500;
+    color: var(--gray-600); cursor: pointer; white-space: nowrap;
+    transition: all var(--transition); background: var(--white);
+  }
+  .cat-tab.active { background: var(--orange); border-color: var(--orange); color: var(--white); }
+  .cat-tab:hover:not(.active) { border-color: var(--orange); color: var(--orange); background: var(--orange-light); }
+  .menu-list { padding: 0 24px 24px; }
+  .menu-item {
+    display: flex; align-items: center; gap: 12px;
+    padding: 12px 0; border-bottom: 1px solid var(--gray-100);
+    transition: transform var(--transition);
+  }
+  .menu-item:last-child { border-bottom: none; }
+  .menu-item:hover { transform: scale(1.01); }
+  .item-img {
+    width: 44px; height: 44px; border-radius: 10px; background: var(--orange-light);
+    display: flex; align-items: center; justify-content: center; font-size: 22px;
+    flex-shrink: 0;
+  }
+  .item-info { flex: 1; min-width: 0; }
+  .item-name { font-size: 14px; font-weight: 600; color: var(--gray-900); }
+  .item-sub { font-size: 12px; color: var(--gray-400); }
+  .item-cal { font-size: 14px; font-weight: 600; color: var(--gray-600); margin-right: 8px; }
+  .qty-control {
+    display: flex; align-items: center; gap: 6px;
+  }
+  .qty-btn {
+    width: 28px; height: 28px; border-radius: 8px;
+    border: 1.5px solid var(--orange); background: var(--white);
+    color: var(--orange); font-size: 16px; font-weight: 600;
+    cursor: pointer; display: flex; align-items: center; justify-content: center;
+    transition: all var(--transition);
+  }
+  .qty-btn:hover { background: var(--orange); color: var(--white); }
+  .qty-btn.plus { background: var(--orange); color: var(--white); }
+  .qty-btn.plus:hover { background: #C9510A; }
+  .qty-num { font-size: 14px; font-weight: 600; min-width: 20px; text-align: center; }
+  .menu-footer {
+    padding: 14px 24px; background: var(--gray-50);
+    border-top: 1px solid var(--gray-100);
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .clear-btn { background: none; border: none; color: var(--orange); font-size: 13px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 4px; }
+  .menu-footer-info { font-size: 13px; color: var(--gray-600); font-weight: 500; }
+
+  /* Summary Panel */
+  .summary-title-bar { padding: 20px 24px 4px; }
+  .summary-cals {
+    text-align: center; padding: 20px 24px 16px;
+    border-bottom: 1px solid var(--gray-100);
+  }
+  .cal-num { font-size: 52px; font-weight: 700; color: var(--orange); line-height: 1; }
+  .cal-label { font-size: 13px; color: var(--gray-400); margin-top: 4px; }
+  .macros { padding: 16px 24px; }
+  .macro-row { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+  .macro-label { font-size: 13px; font-weight: 600; width: 52px; flex-shrink: 0; }
+  .macro-bar-bg { flex: 1; height: 6px; background: var(--gray-100); border-radius: 100px; overflow: hidden; }
+  .macro-bar { height: 100%; border-radius: 100px; transition: width 0.5s ease; }
+  .macro-bar.protein { background: #3B82F6; }
+  .macro-bar.carbs { background: var(--orange); }
+  .macro-bar.fat { background: #EF4444; }
+  .macro-bar.sugar { background: #EC4899; }
+  .macro-bar.fiber { background: var(--green); }
+  .macro-val { font-size: 13px; font-weight: 600; color: var(--gray-600); min-width: 30px; text-align: right; }
+  .summary-actions {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px;
+    padding: 0 24px 20px;
+  }
+  .action-btn {
+    display: flex; flex-direction: column; align-items: center; gap: 4px;
+    padding: 12px 8px; border-radius: var(--radius-sm);
+    border: 1px solid var(--gray-200); background: var(--white);
+    cursor: pointer; transition: all var(--transition); color: var(--orange);
+  }
+  .action-btn:hover { background: var(--orange-light); border-color: var(--orange); }
+  .action-btn-icon { font-size: 20px; }
+  .action-btn-label { font-size: 11px; font-weight: 600; }
+  .saved-note { text-align: center; font-size: 12px; color: var(--gray-400); padding-bottom: 20px; }
+
+  /* ── HOW IT WORKS ── */
+  .how-it-works { background: var(--white); }
+  .hiw-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-top: 48px;
+  }
+  .hiw-card {
+    background: var(--gray-50); border-radius: var(--radius-md);
+    padding: 28px 24px; border: 1px solid var(--gray-100);
+    transition: transform var(--transition), box-shadow var(--transition);
+  }
+  .hiw-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); }
+  .hiw-icon {
+    width: 52px; height: 52px; background: var(--orange-light);
+    border-radius: var(--radius-sm); display: flex; align-items: center;
+    justify-content: center; font-size: 24px; margin-bottom: 16px;
+  }
+  .hiw-num { font-size: 12px; font-weight: 700; color: var(--orange); margin-bottom: 6px; letter-spacing: 0.05em; }
+  .hiw-title { font-size: 17px; font-weight: 700; margin-bottom: 8px; }
+  .hiw-desc { font-size: 14px; color: var(--gray-600); line-height: 1.6; }
+
+  /* ── USE OUR CALCULATOR ── */
+  .use-calculator { background: var(--orange); color: var(--white); }
+  .use-calc-inner {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: center;
+  }
+  .use-calc-inner .section-title { color: var(--white); }
+  .use-calc-inner .section-desc { color: rgba(255,255,255,0.8); }
+  .use-calc-benefits { list-style: none; margin-top: 28px; display: flex; flex-direction: column; gap: 14px; }
+  .use-calc-benefits li {
+    display: flex; align-items: flex-start; gap: 12px;
+    font-size: 15px; color: rgba(255,255,255,0.9);
+  }
+  .benefit-icon {
+    width: 28px; height: 28px; border-radius: 8px; background: rgba(255,255,255,0.2);
+    display: flex; align-items: center; justify-content: center; font-size: 14px; flex-shrink: 0;
+  }
+  .use-calc-visual {
+    background: rgba(255,255,255,0.12); border-radius: var(--radius-lg);
+    padding: 28px; display: flex; flex-direction: column; gap: 12px;
+  }
+  .calc-feature-chip {
+    background: rgba(255,255,255,0.15); border-radius: 100px;
+    padding: 8px 16px; font-size: 13px; font-weight: 500; color: var(--white);
+    display: flex; align-items: center; gap: 8px;
+  }
+
+  /* ── HOW TO USE SECTION ── */
+  .how-to-use { background: var(--off-white); }
+  .how-to-use-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 48px; margin-top: 48px;
+  }
+  .steps-list { display: flex; flex-direction: column; gap: 20px; }
+  .step-item {
+    display: flex; gap: 16px; align-items: flex-start;
+  }
+  .step-num {
+    width: 36px; height: 36px; border-radius: 10px; background: var(--orange);
+    color: var(--white); font-weight: 700; font-size: 15px;
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  }
+  .step-content { }
+  .step-title { font-size: 15px; font-weight: 600; margin-bottom: 4px; }
+  .step-desc { font-size: 14px; color: var(--gray-600); }
+  .what-is-box {
+    background: var(--white); border-radius: var(--radius-md);
+    padding: 28px 28px; border: 1px solid var(--gray-200);
+  }
+  .what-is-box h3 { font-family: 'Playfair Display', serif; font-size: 22px; margin-bottom: 14px; }
+  .what-is-box p { font-size: 15px; color: var(--gray-600); line-height: 1.75; }
+  .what-is-box p + p { margin-top: 12px; }
+
+  /* ── LOW CALORIE OPTIONS ── */
+  .low-cal { background: var(--white); }
+  .low-cal-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 16px; margin-top: 40px;
+  }
+  .low-cal-card {
+    background: var(--gray-50); border-radius: var(--radius-md);
+    padding: 20px 20px; border: 1px solid var(--gray-100);
+    display: flex; flex-direction: column; gap: 8px;
+    transition: transform var(--transition), box-shadow var(--transition);
+  }
+  .low-cal-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-md); }
+  .low-cal-icon { font-size: 28px; }
+  .low-cal-name { font-size: 15px; font-weight: 600; }
+  .low-cal-note { font-size: 13px; color: var(--gray-400); }
+  .low-cal-badge {
+    display: inline-block; background: var(--green-light); color: var(--green);
+    border-radius: 100px; padding: 3px 12px; font-size: 12px; font-weight: 700; width: fit-content;
+  }
+
+  /* ── UNDERSTANDING NUTRITION ── */
+  .understanding { background: var(--gray-50); }
+  .nutrition-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 16px; margin-top: 40px;
+  }
+  .nutrition-card {
+    background: var(--white); border-radius: var(--radius-md);
+    padding: 22px 20px; border: 1px solid var(--gray-100);
+    transition: transform var(--transition);
+  }
+  .nutrition-card:hover { transform: translateY(-2px); }
+  .nutrition-icon { font-size: 28px; margin-bottom: 12px; }
+  .nutrition-name { font-size: 15px; font-weight: 700; margin-bottom: 6px; }
+  .nutrition-desc { font-size: 13px; color: var(--gray-600); line-height: 1.6; }
+  .nutrition-bar-visual {
+    margin-top: 12px; height: 5px; border-radius: 100px; background: var(--gray-100); overflow: hidden;
+  }
+  .nutrition-bar-fill { height: 100%; border-radius: 100px; }
+
+  /* ── HEALTHY TIPS ── */
+  .healthy-tips { background: var(--white); }
+  .tips-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 14px; margin-top: 40px; }
+  .tip-item {
+    display: flex; align-items: flex-start; gap: 14px;
+    background: var(--gray-50); border-radius: var(--radius-sm);
+    padding: 16px 18px; border: 1px solid var(--gray-100);
+    transition: transform var(--transition);
+  }
+  .tip-item:hover { transform: scale(1.02); }
+  .tip-check {
+    width: 28px; height: 28px; border-radius: 8px; background: var(--green-light);
+    color: var(--green); display: flex; align-items: center; justify-content: center;
+    font-size: 14px; font-weight: 700; flex-shrink: 0;
+  }
+  .tip-text { font-size: 14px; font-weight: 500; color: var(--gray-900); line-height: 1.5; }
+
+  /* ── FAQ ── */
+  .faq { background: var(--gray-50); }
+  .faq-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 40px; }
+  .faq-item {
+    background: var(--white); border-radius: var(--radius-sm);
+    border: 1px solid var(--gray-200); overflow: hidden;
+  }
+  .faq-q {
+    width: 100%; padding: 18px 20px; text-align: left;
+    background: none; border: none; cursor: pointer;
+    display: flex; justify-content: space-between; align-items: center;
+    font-family: 'DM Sans', sans-serif; font-size: 15px; font-weight: 600;
+    color: var(--gray-900); gap: 12px;
+  }
+  .faq-toggle {
+    width: 24px; height: 24px; border-radius: 6px; background: var(--gray-100);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px; color: var(--orange); flex-shrink: 0;
+    transition: transform var(--transition), background var(--transition);
+  }
+  .faq-item.open .faq-toggle { transform: rotate(45deg); background: var(--orange); color: var(--white); }
+  .faq-a {
+    padding: 0 20px; max-height: 0; overflow: hidden;
+    transition: max-height 0.35s ease, padding 0.3s ease;
+    font-size: 14px; color: var(--gray-600); line-height: 1.7;
+  }
+  .faq-item.open .faq-a { max-height: 200px; padding: 0 20px 18px; }
+
+  /* ── EXPLORE MORE ── */
+  .explore-more { background: var(--white); }
+  .explore-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 14px; margin-top: 40px; }
+  .explore-card {
+    background: var(--orange-light); border-radius: var(--radius-md);
+    padding: 24px 20px; text-align: center; cursor: pointer;
+    border: 1.5px solid transparent;
+    transition: all var(--transition);
+  }
+  .explore-card:hover { border-color: var(--orange); transform: translateY(-3px); background: var(--white); box-shadow: var(--shadow-md); }
+  .explore-icon { font-size: 32px; margin-bottom: 10px; }
+  .explore-name { font-size: 14px; font-weight: 700; color: var(--gray-900); margin-bottom: 4px; }
+  .explore-desc { font-size: 12px; color: var(--gray-400); }
+  .explore-arrow { font-size: 12px; color: var(--orange); font-weight: 600; margin-top: 8px; }
+
+  /* ── BLOGS ── */
+  .blogs { background: var(--off-white); }
+  .blogs-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 40px; }
+  .view-all { font-size: 14px; color: var(--orange); font-weight: 600; text-decoration: none; }
+  .view-all:hover { text-decoration: underline; }
+  .blogs-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+  .blog-card {
+    background: var(--white); border-radius: var(--radius-md); overflow: hidden;
+    border: 1px solid var(--gray-100); box-shadow: var(--shadow-sm);
+    transition: transform var(--transition), box-shadow var(--transition);
+  }
+  .blog-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); }
+  .blog-img {
+    height: 160px; background: linear-gradient(135deg, var(--orange-light), var(--orange));
+    display: flex; align-items: center; justify-content: center; font-size: 48px;
+  }
+  .blog-body { padding: 20px; }
+  .blog-tag { font-size: 11px; font-weight: 700; color: var(--orange); letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 8px; }
+  .blog-title { font-size: 15px; font-weight: 700; margin-bottom: 8px; color: var(--gray-900); line-height: 1.4; }
+  .blog-meta { font-size: 12px; color: var(--gray-400); margin-bottom: 14px; }
+  .blog-read { font-size: 13px; color: var(--orange); font-weight: 600; text-decoration: none; }
+  .blog-read:hover { text-decoration: underline; }
+
+  /* ── BUILT FOR EVERYONE ── */
+  .built-for { background: var(--white); }
+  .built-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-top: 40px; }
+  .built-card {
+    background: var(--gray-50); border-radius: var(--radius-md);
+    padding: 28px 20px; text-align: center; border: 1px solid var(--gray-100);
+    transition: transform var(--transition), box-shadow var(--transition);
+  }
+  .built-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); }
+  .built-icon { font-size: 36px; margin-bottom: 14px; }
+  .built-title { font-size: 15px; font-weight: 700; margin-bottom: 8px; }
+  .built-desc { font-size: 13px; color: var(--gray-600); line-height: 1.6; }
+
+  /* ── LOW CAL MEAL EXAMPLES ── */
+  .meal-examples { background: var(--gray-50); }
+  .meals-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 16px; margin-top: 40px; }
+  .meal-card {
+    background: var(--white); border-radius: var(--radius-md);
+    padding: 22px 20px; border: 1px solid var(--gray-100);
+    transition: transform var(--transition), box-shadow var(--transition);
+  }
+  .meal-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-md); }
+  .meal-items { display: flex; flex-direction: column; gap: 6px; margin-bottom: 14px; }
+  .meal-item-row { display: flex; align-items: center; gap: 8px; font-size: 14px; color: var(--gray-600); }
+  .meal-item-row span { font-size: 16px; }
+  .meal-total {
+    display: flex; justify-content: space-between; align-items: center;
+    border-top: 1px solid var(--gray-100); padding-top: 12px;
+  }
+  .meal-total-label { font-size: 13px; color: var(--gray-400); }
+  .meal-total-cal { font-size: 20px; font-weight: 700; color: var(--orange); }
+  .meal-tag {
+    font-size: 11px; font-weight: 700; color: var(--green);
+    background: var(--green-light); border-radius: 100px;
+    padding: 3px 10px; margin-bottom: 14px; display: inline-block;
+  }
+
+  /* ── ABOUT US ── */
+  .about { background: var(--white); }
+  .about-inner {
+    display: grid; grid-template-columns: 300px 1fr; gap: 64px; align-items: start;
+  }
+  .about-avatar {
+    background: var(--orange-light); border-radius: var(--radius-lg);
+    aspect-ratio: 1; display: flex; align-items: center; justify-content: center;
+    font-size: 80px; border: 3px solid var(--orange);
+    max-width: 280px;
+  }
+  .about-content { }
+  .about-name { font-family: 'Playfair Display', serif; font-size: 28px; font-weight: 700; margin-bottom: 4px; }
+  .about-role { font-size: 14px; color: var(--orange); font-weight: 600; margin-bottom: 20px; }
+  .about-bio { font-size: 16px; color: var(--gray-600); line-height: 1.75; margin-bottom: 20px; }
+  .about-mission {
+    background: var(--orange-light); border-left: 3px solid var(--orange);
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+    padding: 16px 20px;
+  }
+  .about-mission-label { font-size: 11px; font-weight: 700; color: var(--orange); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 6px; }
+  .about-mission p { font-size: 15px; color: var(--gray-700); font-weight: 500; line-height: 1.65; }
+  .about-stats { display: flex; gap: 32px; margin-top: 28px; }
+  .about-stat-num { font-size: 26px; font-weight: 700; color: var(--orange); }
+  .about-stat-lbl { font-size: 13px; color: var(--gray-400); }
+
+  /* ── TRUSTED BY ── */
+  .trusted { background: var(--gray-50); }
+  .trusted-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 40px; }
+  .testimonial-card {
+    background: var(--white); border-radius: var(--radius-md);
+    padding: 24px 22px; border: 1px solid var(--gray-100);
+    box-shadow: var(--shadow-sm);
+    transition: transform var(--transition);
+  }
+  .testimonial-card:hover { transform: translateY(-3px); }
+  .testimonial-stars { color: #F59E0B; font-size: 14px; margin-bottom: 12px; }
+  .testimonial-text { font-size: 14px; color: var(--gray-600); line-height: 1.7; margin-bottom: 16px; font-style: italic; }
+  .testimonial-author { display: flex; align-items: center; gap: 10px; }
+  .author-avatar {
+    width: 36px; height: 36px; border-radius: 50%;
+    background: var(--orange-light); color: var(--orange);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px; font-weight: 700;
+  }
+  .author-name { font-size: 13px; font-weight: 700; }
+  .author-source { font-size: 11px; color: var(--gray-400); }
+
+  /* ── FOOTER ── */
+  .footer {
+    background: var(--gray-900); color: var(--white);
+    padding: 60px 24px 0;
+  }
+  .footer-inner {
+    max-width: 1200px; margin: 0 auto;
+    display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 48px;
+    padding-bottom: 48px; border-bottom: 1px solid rgba(255,255,255,0.1);
+  }
+  .footer-brand { }
+  .footer-logo { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
+  .footer-logo-icon {
+    width: 36px; height: 36px; background: var(--orange);
+    border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 18px;
+  }
+  .footer-logo-text { font-size: 14px; font-weight: 600; color: var(--white); line-height: 1.2; }
+  .footer-brand-desc { font-size: 13px; color: rgba(255,255,255,0.5); line-height: 1.7; max-width: 240px; margin-bottom: 20px; }
+  .footer-socials { display: flex; gap: 8px; }
+  .social-btn {
+    width: 34px; height: 34px; border-radius: 8px; background: rgba(255,255,255,0.08);
+    display: flex; align-items: center; justify-content: center; font-size: 14px;
+    cursor: pointer; transition: background var(--transition);
+  }
+  .social-btn:hover { background: var(--orange); }
+  .footer-col h4 { font-size: 13px; font-weight: 700; color: var(--white); margin-bottom: 14px; }
+  .footer-links { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+  .footer-links a { font-size: 13px; color: rgba(255,255,255,0.5); text-decoration: none; transition: color var(--transition); }
+  .footer-links a:hover { color: var(--orange); }
+  .footer-bottom {
+    max-width: 1200px; margin: 0 auto;
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 20px 0; font-size: 12px; color: rgba(255,255,255,0.35);
+  }
+  .footer-bottom a { color: var(--orange); text-decoration: none; }
+
+  /* ── SHIMMER LOADING ── */
+  @keyframes shimmer {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+  }
+  .shimmer {
+    background: linear-gradient(90deg, var(--gray-100) 25%, var(--gray-50) 50%, var(--gray-100) 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+    border-radius: 6px;
+  }
+
+  /* ── MOBILE ── */
+  @media (max-width: 900px) {
+    .hero-inner { grid-template-columns: 1fr; }
+    .hero-image { display: none; }
+    .calculator-layout { grid-template-columns: 1fr; }
+    .hiw-grid { grid-template-columns: 1fr; }
+    .use-calc-inner { grid-template-columns: 1fr; }
+    .how-to-use-grid { grid-template-columns: 1fr; }
+    .faq-grid { grid-template-columns: 1fr; }
+    .blogs-grid { grid-template-columns: 1fr; }
+    .built-grid { grid-template-columns: repeat(2, 1fr); }
+    .about-inner { grid-template-columns: 1fr; }
+    .trusted-grid { grid-template-columns: 1fr; }
+    .footer-inner { grid-template-columns: 1fr 1fr; }
+    nav { display: none; }
+    .hero-stats { flex-wrap: wrap; gap: 16px; }
+  }
+  @media (max-width: 600px) {
+    section { padding: 56px 16px; }
+    .built-grid { grid-template-columns: 1fr 1fr; }
+    .footer-inner { grid-template-columns: 1fr; }
+    .footer-bottom { flex-direction: column; gap: 8px; text-align: center; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="header">
+  <div class="header-inner">
+    <a href="#" class="logo">
+      <div class="logo-icon">☕</div>
+      <div class="logo-text">Starbucks Nutrition<span>Calculator</span></div>
+    </a>
+    <nav>
+      <a href="#">Home</a>
+      <a href="#">Calculator</a>
+      <a href="#">Blog</a>
+      <a href="#">Nutrition Tips</a>
+      <a href="#">Contact</a>
+      <a href="#">About</a>
+    </nav>
+    <div class="header-actions">
+      <button class="theme-toggle" title="Toggle theme">☀</button>
+      <button class="theme-toggle" title="Dark mode">🌙</button>
+      <a href="#calculator" class="btn-primary">⬡ Start Calculator</a>
+    </div>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="hero" id="home">
+  <div class="hero-inner">
+    <div>
+      <div class="hero-badge">Free & No Signup Required</div>
+      <h1>Starbucks Nutrition <span>Calculator</span></h1>
+      <p>Track calories, protein, carbs, and fat in every Starbucks item. Make smarter choices for a healthier you.</p>
+      <div class="hero-cta">
+        <a href="#calculator" class="btn-primary">⬡ Start Calculator</a>
+        <a href="#how-to-use" class="btn-secondary">How it works →</a>
+      </div>
+      <div class="hero-stats">
+        <div class="hero-stat"><span class="hero-stat-num">50+</span><span class="hero-stat-label">Tools Built</span></div>
+        <div class="hero-stat"><span class="hero-stat-num">10K+</span><span class="hero-stat-label">Happy Users</span></div>
+        <div class="hero-stat"><span class="hero-stat-num">100%</span><span class="hero-stat-label">Free Forever</span></div>
+      </div>
+    </div>
+    <div class="hero-image">
+      <div class="hero-cup">☕
+        <div class="hero-float-card top"><span class="num">740</span>Calories tracked</div>
+        <div class="hero-float-card bottom"><span class="num">Live</span>Real-time updates</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CALCULATOR + MENU -->
+<section class="calculator-section" id="calculator">
+  <div class="section-inner">
+    <span class="section-label">Free Tool</span>
+    <h2 class="section-title">Menu Items & Nutrition</h2>
+    <div class="calculator-layout" style="margin-top: 32px;">
+
+      <!-- MENU PANEL -->
+      <div class="menu-panel">
+        <div class="panel-header">
+          <div class="panel-title">Menu Items</div>
+        </div>
+        <div class="search-bar">
+          <span class="search-icon">🔍</span>
+          <input type="text" placeholder="Search items..." />
+        </div>
+        <div class="category-tabs">
+          <div class="cat-tab active">⊞ All Items</div>
+          <div class="cat-tab">☕ Hot Drinks</div>
+          <div class="cat-tab">🧊 Cold Drinks</div>
+          <div class="cat-tab">🥤 Frappuccinos</div>
+          <div class="cat-tab">🥗 Food</div>
+          <div class="cat-tab">➕ Add-ons</div>
+        </div>
+        <div class="menu-list">
+          <div class="menu-item">
+            <div class="item-img">☕</div>
+            <div class="item-info">
+              <div class="item-name">Caffè Latte</div>
+              <div class="item-sub">Grande 16 fl oz</div>
+            </div>
+            <div class="item-cal">190 cal</div>
+            <div class="qty-control">
+              <button class="qty-btn plus">+</button>
+            </div>
+          </div>
+          <div class="menu-item">
+            <div class="item-img">🍮</div>
+            <div class="item-info">
+              <div class="item-name">Caramel Macchiato</div>
+              <div class="item-sub">Grande 16 fl oz</div>
+            </div>
+            <div class="item-cal">250 cal</div>
+            <div class="qty-control">
+              <button class="qty-btn" onclick="this.parentElement.innerHTML='<button class=qty-btn onclick=this.style.display=\'none\' style=border-color:#ccc>−</button><span class=qty-num>1</span><button class=qty-btn plus>+</button>'">+</button>
+            </div>
+          </div>
+          <div class="menu-item">
+            <div class="item-img">🌿</div>
+            <div class="item-info">
+              <div class="item-name">Vanilla Sweet Cream Cold Brew</div>
+              <div class="item-sub">Grande 16 fl oz</div>
+            </div>
+            <div class="item-cal">150 cal</div>
+            <div class="qty-control">
+              <button class="qty-btn plus" style="background:#C9510A">+</button>
+            </div>
+          </div>
+          <div class="menu-item">
+            <div class="item-img">🥐</div>
+            <div class="item-info">
+              <div class="item-name">Chocolate Croissant</div>
+              <div class="item-sub">1 piece</div>
+            </div>
+            <div class="item-cal">320 cal</div>
+            <div class="qty-control">
+              <button class="qty-btn plus">+</button>
+            </div>
+          </div>
+          <div class="menu-item">
+            <div class="item-img">🥙</div>
+            <div class="item-info">
+              <div class="item-name">Chicken & Hummus Protein Box</div>
+              <div class="item-sub">1 box</div>
+            </div>
+            <div class="item-cal">480 cal</div>
+            <div class="qty-control">
+              <button class="qty-btn">−</button>
+              <span class="qty-num">1</span>
+              <button class="qty-btn plus">+</button>
+            </div>
+          </div>
+          <div class="menu-item">
+            <div class="item-img">🍫</div>
+            <div class="item-info">
+              <div class="item-name">Iced Caramel Mocha</div>
+              <div class="item-sub">Grande 16 fl oz</div>
+            </div>
+            <div class="item-cal">280 cal</div>
+            <div class="qty-control">
+              <button class="qty-btn plus">+</button>
+            </div>
+          </div>
+          <div class="menu-item">
+            <div class="item-img">🫐</div>
+            <div class="item-info">
+              <div class="item-name">Blueberry Muffin</div>
+              <div class="item-sub">1 piece</div>
+            </div>
+            <div class="item-cal">360 cal</div>
+            <div class="qty-control">
+              <button class="qty-btn plus">+</button>
+            </div>
+          </div>
+        </div>
+        <div class="menu-footer">
+          <button class="clear-btn">🗑 Clear All</button>
+          <div class="menu-footer-info">3 items selected &nbsp;·&nbsp; <strong>740 calories</strong></div>
+        </div>
+      </div>
+
+      <!-- SUMMARY PANEL -->
+      <div class="summary-panel">
+        <div class="summary-title-bar panel-header">
+          <div class="panel-title">Your Nutrition Summary</div>
+        </div>
+        <div class="summary-cals">
+          <div class="cal-num">740</div>
+          <div class="cal-label">Calories</div>
+        </div>
+        <div class="macros">
+          <div class="macro-row">
+            <div class="macro-label" style="color:#3B82F6">Protein</div>
+            <div class="macro-bar-bg"><div class="macro-bar protein" style="width:60%"></div></div>
+            <div class="macro-val">31g</div>
+          </div>
+          <div class="macro-row">
+            <div class="macro-label" style="color:var(--orange)">Carbs</div>
+            <div class="macro-bar-bg"><div class="macro-bar carbs" style="width:80%"></div></div>
+            <div class="macro-val">95g</div>
+          </div>
+          <div class="macro-row">
+            <div class="macro-label" style="color:#EF4444">Fat</div>
+            <div class="macro-bar-bg"><div class="macro-bar fat" style="width:45%"></div></div>
+            <div class="macro-val">24g</div>
+          </div>
+          <div class="macro-row">
+            <div class="macro-label" style="color:#EC4899">Sugar</div>
+            <div class="macro-bar-bg"><div class="macro-bar sugar" style="width:70%"></div></div>
+            <div class="macro-val">58g</div>
+          </div>
+          <div class="macro-row">
+            <div class="macro-label" style="color:var(--green)">Fiber</div>
+            <div class="macro-bar-bg"><div class="macro-bar fiber" style="width:20%"></div></div>
+            <div class="macro-val">6g</div>
+          </div>
+        </div>
+        <div class="summary-actions">
+          <button class="action-btn">
+            <span class="action-btn-icon">🔖</span>
+            <span class="action-btn-label">Save Meal</span>
+          </button>
+          <button class="action-btn">
+            <span class="action-btn-icon">↗</span>
+            <span class="action-btn-label">Share</span>
+          </button>
+          <button class="action-btn">
+            <span class="action-btn-icon">📄</span>
+            <span class="action-btn-label">Save PDF</span>
+          </button>
+        </div>
+        <div class="saved-note">Saved meals are stored locally</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="how-it-works" id="how-it-works">
+  <div class="section-inner">
+    <span class="section-label">Simple Process</span>
+    <h2 class="section-title">How It Works</h2>
+    <p class="section-desc">Three simple steps to track your nutrition and make healthier choices.</p>
+    <div class="hiw-grid">
+      <div class="hiw-card">
+        <div class="hiw-icon">🔍</div>
+        <div class="hiw-num">STEP 01</div>
+        <div class="hiw-title">Search</div>
+        <div class="hiw-desc">Find any Starbucks drink or food item using our real-time search. Filter by category for faster browsing.</div>
+      </div>
+      <div class="hiw-card">
+        <div class="hiw-icon">➕</div>
+        <div class="hiw-num">STEP 02</div>
+        <div class="hiw-title">Add Items</div>
+        <div class="hiw-desc">Customize with sides, milk alternatives, syrups, and more. Your nutrition updates instantly.</div>
+      </div>
+      <div class="hiw-card">
+        <div class="hiw-icon">📊</div>
+        <div class="hiw-num">STEP 03</div>
+        <div class="hiw-title">See Results</div>
+        <div class="hiw-desc">Get instant nutrition facts and a complete macro breakdown. Save, share, or download your results.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- USE OUR CALCULATOR -->
+<section class="use-calculator">
+  <div class="section-inner">
+    <div class="use-calc-inner">
+      <div>
+        <span class="section-label" style="color:rgba(255,255,255,0.7)">Why Choose Us</span>
+        <h2 class="section-title">Use Our Calculator</h2>
+        <p class="section-desc">The fastest way to understand exactly what's in your Starbucks order — no signup, no guesswork, no nonsense.</p>
+        <ul class="use-calc-benefits">
+          <li>
+            <div class="benefit-icon">⚡</div>
+            <span><strong style="color:#fff">Fast calculation</strong> — See calories and macros in under a second as you build your order</span>
+          </li>
+          <li>
+            <div class="benefit-icon">🔄</div>
+            <span><strong style="color:#fff">Real-time updates</strong> — Every addition or removal instantly recalculates your full nutritional breakdown</span>
+          </li>
+          <li>
+            <div class="benefit-icon">🎛</div>
+            <span><strong style="color:#fff">Easy customization</strong> — Swap milk, add syrups, adjust toppings and see exactly how it changes your numbers</span>
+          </li>
+          <li>
+            <div class="benefit-icon">📱</div>
+            <span><strong style="color:#fff">Works everywhere</strong> — Optimized for mobile, tablet, and desktop with zero loading delays</span>
+          </li>
+        </ul>
+      </div>
+      <div class="use-calc-visual">
+        <div class="calc-feature-chip">✓ 100% based on official Starbucks data</div>
+        <div class="calc-feature-chip">✓ No signups or fees required</div>
+        <div class="calc-feature-chip">✓ Protein, carbs, fat, sugar, fiber</div>
+        <div class="calc-feature-chip">✓ Save and share your meal</div>
+        <div class="calc-feature-chip">✓ Download as PDF</div>
+        <div class="calc-feature-chip">✓ Compare items side by side</div>
+        <div style="margin-top:8px">
+          <a href="#calculator" style="display:inline-flex;align-items:center;gap:8px;background:var(--white);color:var(--orange);padding:13px 24px;border-radius:10px;font-weight:700;font-size:15px;text-decoration:none;transition:all 0.2s">Start Calculating →</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW TO USE -->
+<section class="how-to-use" id="how-to-use">
+  <div class="section-inner">
+    <span class="section-label">Step by Step</span>
+    <h2 class="section-title">How to Use Starbucks Nutrition Calculator</h2>
+    <p class="section-desc">Using our Starbucks Nutrition Calculator is incredibly simple — follow these steps to get started.</p>
+    <div class="how-to-use-grid">
+      <div class="steps-list">
+        <div class="step-item">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            <div class="step-title">Search for your favorite item</div>
+            <div class="step-desc">Type any drink or food name in the search bar to find it instantly.</div>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            <div class="step-title">Filter by category</div>
+            <div class="step-desc">Browse Hot Drinks, Cold Drinks, Frappuccinos, Food Items, or Add-ons using the category tabs.</div>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            <div class="step-title">Add items with the + button</div>
+            <div class="step-desc">Click the plus button to add items. Use − to remove or adjust quantities freely.</div>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">4</div>
+          <div class="step-content">
+            <div class="step-title">View live nutrition updates</div>
+            <div class="step-desc">Your nutrition summary updates in real-time with calories, protein, carbs, fat, sugar, and fiber.</div>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">5</div>
+          <div class="step-content">
+            <div class="step-title">Customize your drinks</div>
+            <div class="step-desc">Add milk options, syrups, toppings and see how each customization changes the nutrition.</div>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">6</div>
+          <div class="step-content">
+            <div class="step-title">Save, Share, or Save PDF</div>
+            <div class="step-desc">Store your meal locally, share results with friends, or download a PDF summary.</div>
+          </div>
+        </div>
+      </div>
+      <div class="what-is-box">
+        <h3>What is Starbucks Nutrition Calculator?</h3>
+        <p>The Starbucks Nutrition Calculator is a free, easy-to-use online tool designed to help you track the nutritional content of your Starbucks orders. Whether you're counting calories, monitoring macros for fitness goals, or simply making healthier choices, our calculator provides instant, accurate nutrition facts for every Starbucks drink and food item on the menu.</p>
+        <p>Unlike third-party apps that require accounts or subscriptions, our tool is completely free, requires no login, and works instantly on any device. It uses 100% official Starbucks nutrition data, so you can trust every number you see.</p>
+        <p>Perfect for fitness enthusiasts, those on weight-loss journeys, or anyone who simply wants to make more informed choices at Starbucks without spending time digging through menus.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- LOW CALORIE OPTIONS -->
+<section class="low-cal" id="low-calorie">
+  <div class="section-inner">
+    <span class="section-label">Smart Choices</span>
+    <h2 class="section-title">Low Calorie Starbucks Options</h2>
+    <p class="section-desc">Looking for lighter Starbucks choices? Here are some of the best low-calorie options on the menu.</p>
+    <div class="low-cal-grid">
+      <div class="low-cal-card">
+        <div class="low-cal-icon">☕</div>
+        <div class="low-cal-name">Caffè Americano</div>
+        <div class="low-cal-note">Grande · Black</div>
+        <div class="low-cal-badge">Only 15 cal</div>
+      </div>
+      <div class="low-cal-card">
+        <div class="low-cal-icon">🫖</div>
+        <div class="low-cal-name">Cold Brew Coffee</div>
+        <div class="low-cal-note">Grande · Unsweetened</div>
+        <div class="low-cal-badge">6 cal</div>
+      </div>
+      <div class="low-cal-card">
+        <div class="low-cal-icon">🍵</div>
+        <div class="low-cal-name">Pike Place Roast</div>
+        <div class="low-cal-note">Grande · Black</div>
+        <div class="low-cal-badge">5 cal</div>
+      </div>
+      <div class="low-cal-card">
+        <div class="low-cal-icon">🥛</div>
+        <div class="low-cal-name">Cappuccino (Nonfat Milk)</div>
+        <div class="low-cal-note">Grande · No sugar</div>
+        <div class="low-cal-badge">80 cal</div>
+      </div>
+      <div class="low-cal-card">
+        <div class="low-cal-icon">☕</div>
+        <div class="low-cal-name">Caffè Latte (Nonfat Milk)</div>
+        <div class="low-cal-note">Grande · Nonfat milk</div>
+        <div class="low-cal-badge">130 cal</div>
+      </div>
+      <div class="low-cal-card">
+        <div class="low-cal-icon">🍃</div>
+        <div class="low-cal-name">Iced Green Tea</div>
+        <div class="low-cal-note">Grande · Unsweetened</div>
+        <div class="low-cal-badge">0 cal</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- UNDERSTANDING NUTRITION -->
+<section class="understanding">
+  <div class="section-inner">
+    <span class="section-label">Learn the Basics</span>
+    <h2 class="section-title">Understanding Starbucks Nutrition Facts</h2>
+    <p class="section-desc">Every Starbucks drink contains different amounts of these key nutrients. Here's what each one means for your health.</p>
+    <div class="nutrition-grid">
+      <div class="nutrition-card">
+        <div class="nutrition-icon">🔥</div>
+        <div class="nutrition-name">Calories</div>
+        <div class="nutrition-desc">The total energy in your drink. Most Starbucks beverages range from 0 to 500+ calories depending on size and customization.</div>
+        <div class="nutrition-bar-visual"><div class="nutrition-bar-fill" style="width:75%;background:var(--orange)"></div></div>
+      </div>
+      <div class="nutrition-card">
+        <div class="nutrition-icon">💪</div>
+        <div class="nutrition-name">Protein</div>
+        <div class="nutrition-desc">Supports muscle repair and keeps you full. Milk-based drinks naturally contain more protein than black coffee.</div>
+        <div class="nutrition-bar-visual"><div class="nutrition-bar-fill" style="width:55%;background:#3B82F6"></div></div>
+      </div>
+      <div class="nutrition-card">
+        <div class="nutrition-icon">🌾</div>
+        <div class="nutrition-name">Carbs</div>
+        <div class="nutrition-desc">Your body's primary energy source. Syrups, milk, and frappuccino bases all add significant carbohydrates.</div>
+        <div class="nutrition-bar-visual"><div class="nutrition-bar-fill" style="width:85%;background:#F59E0B"></div></div>
+      </div>
+      <div class="nutrition-card">
+        <div class="nutrition-icon">🫒</div>
+        <div class="nutrition-name">Fat</div>
+        <div class="nutrition-desc">Found mostly in whole milk, cream, and whipped cream. Switching to nonfat milk significantly reduces fat content.</div>
+        <div class="nutrition-bar-visual"><div class="nutrition-bar-fill" style="width:40%;background:#EF4444"></div></div>
+      </div>
+      <div class="nutrition-card">
+        <div class="nutrition-icon">🍬</div>
+        <div class="nutrition-name">Sugar</div>
+        <div class="nutrition-desc">Comes from syrups, flavored sauces, and milk. Reducing pumps of syrup can cut 20–80 calories per drink.</div>
+        <div class="nutrition-bar-visual"><div class="nutrition-bar-fill" style="width:70%;background:#EC4899"></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HEALTHY TIPS -->
+<section class="healthy-tips">
+  <div class="section-inner">
+    <span class="section-label">Pro Advice</span>
+    <h2 class="section-title">Healthy Starbucks Drink Tips</h2>
+    <p class="section-desc">Simple swaps that can save you hundreds of calories without sacrificing taste.</p>
+    <div class="tips-grid">
+      <div class="tip-item">
+        <div class="tip-check">✓</div>
+        <div class="tip-text">Ask for nonfat or plant-based milk alternatives (almond, oat, coconut) to reduce calories and saturated fat</div>
+      </div>
+      <div class="tip-item">
+        <div class="tip-check">✓</div>
+        <div class="tip-text">Request fewer pumps of syrup — each pump is about 20 calories and 5g of sugar</div>
+      </div>
+      <div class="tip-item">
+        <div class="tip-check">✓</div>
+        <div class="tip-text">Skip the whipped cream to save up to 110 calories and 11g of fat per drink</div>
+      </div>
+      <div class="tip-item">
+        <div class="tip-check">✓</div>
+        <div class="tip-text">Choose a smaller size — a Tall instead of a Venti can cut calories nearly in half</div>
+      </div>
+      <div class="tip-item">
+        <div class="tip-check">✓</div>
+        <div class="tip-text">Use sugar-free syrup options (vanilla, cinnamon dolce) for sweetness without the added calories</div>
+      </div>
+      <div class="tip-item">
+        <div class="tip-check">✓</div>
+        <div class="tip-text">Add cinnamon or vanilla powder for flavor without extra calories — it's free at the condiment bar</div>
+      </div>
+      <div class="tip-item">
+        <div class="tip-check">✓</div>
+        <div class="tip-text">Opt for cold brew or Americano as your base for significantly fewer calories before customizations</div>
+      </div>
+      <div class="tip-item">
+        <div class="tip-check">✓</div>
+        <div class="tip-text">Order "light ice" to get more drink and fewer total calories in the same cup size</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="faq" id="faq">
+  <div class="section-inner">
+    <span class="section-label">Got Questions?</span>
+    <h2 class="section-title">Frequently Asked Questions</h2>
+    <p class="section-desc">Everything you need to know about the Starbucks Nutrition Calculator.</p>
+    <div class="faq-grid" id="faq-grid">
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFAQ(this)">
+          How accurate is the nutrition data?
+          <div class="faq-toggle">+</div>
+        </button>
+        <div class="faq-a">Our data is sourced 100% from official Starbucks nutrition information. We update it regularly to reflect menu changes, seasonal items, and regional variations.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFAQ(this)">
+          Is this calculator free to use?
+          <div class="faq-toggle">+</div>
+        </button>
+        <div class="faq-a">Yes, completely free. No signups, no subscriptions, no hidden fees. We believe nutrition information should be accessible to everyone.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFAQ(this)">
+          Can I customize drink ingredients?
+          <div class="faq-toggle">+</div>
+        </button>
+        <div class="faq-a">Absolutely. You can swap milk types, adjust syrup pumps, add or remove toppings, and the calculator will update your macros in real-time.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFAQ(this)">
+          Can I save my favorite meals?
+          <div class="faq-toggle">+</div>
+        </button>
+        <div class="faq-a">Yes! Use the "Save Meal" button to store your selections locally in your browser. Your saved meals will be there next time you visit.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFAQ(this)">
+          Does it work on mobile devices?
+          <div class="faq-toggle">+</div>
+        </button>
+        <div class="faq-a">Yes, fully optimized for mobile, tablet, and desktop. The layout adapts automatically so the experience is smooth on any screen size.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFAQ(this)">
+          Where does the nutrition data come from?
+          <div class="faq-toggle">+</div>
+        </button>
+        <div class="faq-a">All data comes directly from Starbucks' official nutrition database, published on their website and updated with each menu change.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFAQ(this)">
+          How often is the data updated?
+          <div class="faq-toggle">+</div>
+        </button>
+        <div class="faq-a">We monitor Starbucks' official menu updates and refresh our database accordingly — typically within a few days of any menu change.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFAQ(this)">
+          Can I share my results?
+          <div class="faq-toggle">+</div>
+        </button>
+        <div class="faq-a">Yes! Use the Share button to copy a link or share directly to social media. You can also save a PDF summary to download and send.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- EXPLORE MORE -->
+<section class="explore-more">
+  <div class="section-inner">
+    <span class="section-label">Browse Categories</span>
+    <h2 class="section-title">Explore More</h2>
+    <p class="section-desc">Discover nutrition info for every type of Starbucks item.</p>
+    <div class="explore-grid">
+      <div class="explore-card">
+        <div class="explore-icon">☕</div>
+        <div class="explore-name">Hot Drinks</div>
+        <div class="explore-desc">Lattes, cappuccinos & more</div>
+        <div class="explore-arrow">Explore →</div>
+      </div>
+      <div class="explore-card">
+        <div class="explore-icon">🧊</div>
+        <div class="explore-name">Cold Drinks</div>
+        <div class="explore-desc">Cold brew, iced teas</div>
+        <div class="explore-arrow">Explore →</div>
+      </div>
+      <div class="explore-card">
+        <div class="explore-icon">🥤</div>
+        <div class="explore-name">Frappuccinos</div>
+        <div class="explore-desc">Blended frozen favorites</div>
+        <div class="explore-arrow">Explore →</div>
+      </div>
+      <div class="explore-card">
+        <div class="explore-icon">🥗</div>
+        <div class="explore-name">Food Items</div>
+        <div class="explore-desc">Sandwiches, snacks, protein boxes</div>
+        <div class="explore-arrow">Explore →</div>
+      </div>
+      <div class="explore-card">
+        <div class="explore-icon">✨</div>
+        <div class="explore-name">Add-ons</div>
+        <div class="explore-desc">Syrups, toppings, milk options</div>
+        <div class="explore-arrow">Explore →</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- NUTRITION BLOGS -->
+<section class="blogs" id="blog">
+  <div class="section-inner">
+    <div class="blogs-header">
+      <div>
+        <span class="section-label">Latest Articles</span>
+        <h2 class="section-title" style="margin-bottom:0">Nutrition Blogs</h2>
+      </div>
+      <a href="#" class="view-all">View All →</a>
+    </div>
+    <div class="blogs-grid">
+      <div class="blog-card">
+        <div class="blog-img">📊</div>
+        <div class="blog-body">
+          <div class="blog-tag">Nutrition Guide</div>
+          <div class="blog-title">Ultimate Guide to Starbucks Nutrition</div>
+          <div class="blog-meta">May 15, 2024 · 5 min read</div>
+          <a href="#" class="blog-read">Read more →</a>
+        </div>
+      </div>
+      <div class="blog-card">
+        <div class="blog-img">🧊</div>
+        <div class="blog-body">
+          <div class="blog-tag">Comparison</div>
+          <div class="blog-title">Starbucks Iced vs. Hot: Which Is Healthier?</div>
+          <div class="blog-meta">May 10, 2024 · 4 min read</div>
+          <a href="#" class="blog-read">Read more →</a>
+        </div>
+      </div>
+      <div class="blog-card">
+        <div class="blog-img">🔍</div>
+        <div class="blog-body">
+          <div class="blog-tag">Healthy Choices</div>
+          <div class="blog-title">Hidden Calories in Your Favorite Drink</div>
+          <div class="blog-meta">May 5, 2024 · 6 min read</div>
+          <a href="#" class="blog-read">Read more →</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- BUILT FOR EVERYONE -->
+<section class="built-for">
+  <div class="section-inner">
+    <span class="section-label">For Every Goal</span>
+    <h2 class="section-title">Built for Everyone</h2>
+    <p class="section-desc">Our calculator adapts to your personal health and lifestyle goals.</p>
+    <div class="built-grid">
+      <div class="built-card">
+        <div class="built-icon">🏋️</div>
+        <div class="built-title">Fitness Users</div>
+        <div class="built-desc">Track macros precisely and find high-protein options to fuel your workouts and recovery.</div>
+      </div>
+      <div class="built-card">
+        <div class="built-icon">⚖️</div>
+        <div class="built-title">Weight Loss</div>
+        <div class="built-desc">Find low-calorie options easily and understand exactly where your calories are coming from.</div>
+      </div>
+      <div class="built-card">
+        <div class="built-icon">📈</div>
+        <div class="built-title">Weight Gain</div>
+        <div class="built-desc">Identify calorie-dense drinks and food pairings to help you hit your daily caloric surplus.</div>
+      </div>
+      <div class="built-card">
+        <div class="built-icon">🌿</div>
+        <div class="built-title">Healthy Lifestyle</div>
+        <div class="built-desc">Make mindful, balanced choices every day without obsessing over every number.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- LOW CALORIE MEAL EXAMPLES -->
+<section class="meal-examples">
+  <div class="section-inner">
+    <span class="section-label">Real Examples</span>
+    <h2 class="section-title">Low Calorie Meal Examples</h2>
+    <p class="section-desc">See how small choices add up. Real Starbucks combos with total calorie counts.</p>
+    <div class="meals-grid">
+      <div class="meal-card">
+        <div class="meal-tag">🌿 Light & Clean</div>
+        <div class="meal-items">
+          <div class="meal-item-row"><span>☕</span> Cold Brew Coffee</div>
+          <div class="meal-item-row"><span>🥛</span> + Almond Milk</div>
+        </div>
+        <div class="meal-total">
+          <div class="meal-total-label">Total</div>
+          <div class="meal-total-cal">35 cal</div>
+        </div>
+      </div>
+      <div class="meal-card">
+        <div class="meal-tag">💪 Protein Boost</div>
+        <div class="meal-items">
+          <div class="meal-item-row"><span>☕</span> Caffè Latte (Nonfat)</div>
+          <div class="meal-item-row"><span>🥙</span> Protein Box (Egg)</div>
+        </div>
+        <div class="meal-total">
+          <div class="meal-total-label">Total</div>
+          <div class="meal-total-cal">340 cal</div>
+        </div>
+      </div>
+      <div class="meal-card">
+        <div class="meal-tag">⚡ Quick & Easy</div>
+        <div class="meal-items">
+          <div class="meal-item-row"><span>☕</span> Caffè Americano</div>
+          <div class="meal-item-row"><span>🥐</span> Butter Croissant</div>
+        </div>
+        <div class="meal-total">
+          <div class="meal-total-label">Total</div>
+          <div class="meal-total-cal">265 cal</div>
+        </div>
+      </div>
+      <div class="meal-card">
+        <div class="meal-tag">🍃 Zero Sugar</div>
+        <div class="meal-items">
+          <div class="meal-item-row"><span>🍵</span> Iced Green Tea</div>
+          <div class="meal-item-row"><span>🫐</span> + No sweetener</div>
+        </div>
+        <div class="meal-total">
+          <div class="meal-total-label">Total</div>
+          <div class="meal-total-cal">0 cal</div>
+        </div>
+      </div>
+      <div class="meal-card">
+        <div class="meal-tag">🏋️ Muscle Fuel</div>
+        <div class="meal-items">
+          <div class="meal-item-row"><span>☕</span> Vanilla Latte (2% Milk)</div>
+          <div class="meal-item-row"><span>🥚</span> + Egg Bites (2 ct)</div>
+        </div>
+        <div class="meal-total">
+          <div class="meal-total-label">Total</div>
+          <div class="meal-total-cal">480 cal</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT US -->
+<section class="about" id="about">
+  <div class="section-inner">
+    <div class="about-inner">
+      <div>
+        <div class="about-avatar">👨‍💻</div>
+      </div>
+      <div class="about-content">
+        <span class="section-label">Our Story</span>
+        <h2 class="section-title" style="margin-bottom:6px">About Our Mission & Founder</h2>
+        <div class="about-name" style="font-size:24px;margin-bottom:4px">Dipendra</div>
+        <div class="about-role">Founder · starbucksnutritioncalculator.org</div>
+        <p class="about-bio">Hi, I'm Dipendra, the founder of starbucksnutritioncalculator.org. I built this tool to help people make informed choices about their Starbucks favorites. After struggling to find easy, accurate nutrition data in one place, I decided to build the tool I wished existed — free, fast, and genuinely useful.</p>
+        <div class="about-mission">
+          <div class="about-mission-label">Our Mission</div>
+          <p>To provide accurate, easy-to-use nutrition information for a healthier lifestyle — available to everyone, always free.</p>
+        </div>
+        <div class="about-stats">
+          <div class="about-stat">
+            <div class="about-stat-num">50+</div>
+            <div class="about-stat-lbl">Tools Built</div>
+          </div>
+          <div class="about-stat">
+            <div class="about-stat-num">10K+</div>
+            <div class="about-stat-lbl">Happy Users</div>
+          </div>
+          <div class="about-stat">
+            <div class="about-stat-num">100%</div>
+            <div class="about-stat-lbl">Free Forever</div>
+          </div>
+        </div>
+        <a href="#" style="display:inline-block;margin-top:20px;color:var(--orange);font-weight:600;font-size:14px;text-decoration:none">Learn More About Me →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TRUSTED BY -->
+<section class="trusted">
+  <div class="section-inner">
+    <span class="section-label">Real Feedback</span>
+    <h2 class="section-title">Trusted by Starbucks Lovers on Reddit</h2>
+    <p class="section-desc">See what real users from Reddit and Quora communities are saying about our calculator.</p>
+    <div class="trusted-grid">
+      <div class="testimonial-card">
+        <div class="testimonial-stars">★★★★★</div>
+        <div class="testimonial-text">"This calculator is a game-changer! It helps me enjoy my favorite drinks while staying on track with my calorie goals."</div>
+        <div class="testimonial-author">
+          <div class="author-avatar">CL</div>
+          <div>
+            <div class="author-name">u/CoffeeLover42</div>
+            <div class="author-source">r/starbucks</div>
+          </div>
+        </div>
+      </div>
+      <div class="testimonial-card">
+        <div class="testimonial-stars">★★★★★</div>
+        <div class="testimonial-text">"Super accurate info and I use it every day for my fitness tracking. Finally a tool that has all the Starbucks items with real-time updates."</div>
+        <div class="testimonial-author">
+          <div class="author-avatar">HJ</div>
+          <div>
+            <div class="author-name">u/healthJourney2024</div>
+            <div class="author-source">r/loseit</div>
+          </div>
+        </div>
+      </div>
+      <div class="testimonial-card">
+        <div class="testimonial-stars">★★★★★</div>
+        <div class="testimonial-text">"Finally, a nutrition tool that has all the Starbucks items. Love the real-time updates — I can customize my order and see exactly how it changes the macros."</div>
+        <div class="testimonial-author">
+          <div class="author-avatar">FT</div>
+          <div>
+            <div class="author-name">u/FitnessTrackr_</div>
+            <div class="author-source">r/fitness</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <div class="footer-logo">
+        <div class="footer-logo-icon">☕</div>
+        <div class="footer-logo-text">Starbucks Nutrition<br>Calculator</div>
+      </div>
+      <p class="footer-brand-desc">Your free, accurate tool for tracking Starbucks nutrition. Make healthier choices every day.</p>
+      <div class="footer-socials">
+        <div class="social-btn">f</div>
+        <div class="social-btn">𝕏</div>
+        <div class="social-btn">in</div>
+        <div class="social-btn">📌</div>
+        <div class="social-btn">▶</div>
+      </div>
+    </div>
+    <div class="footer-col">
+      <h4>Quick Links</h4>
+      <ul class="footer-links">
+        <li><a href="#">Home</a></li>
+        <li><a href="#">Calculator</a></li>
+        <li><a href="#">Blog</a></li>
+        <li><a href="#">Menu Guide</a></li>
+        <li><a href="#">About</a></li>
+        <li><a href="#">Contact</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Categories</h4>
+      <ul class="footer-links">
+        <li><a href="#">Hot Drinks</a></li>
+        <li><a href="#">Cold Drinks</a></li>
+        <li><a href="#">Food</a></li>
+        <li><a href="#">Add-ons</a></li>
+        <li><a href="#">Nutrition Facts</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Contact</h4>
+      <p style="font-size:13px;color:rgba(255,255,255,0.5);line-height:1.7;margin-bottom:16px">hello@starbucksnutritioncalculator.org<br>We'd love to hear from you!</p>
+      <a href="mailto:hello@starbucksnutritioncalculator.org" class="btn-primary" style="font-size:13px;padding:8px 16px">Get In Touch</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2024 starbucksnutritioncalculator.org. All rights reserved. Built with ❤ by Dipendra.</span>
+    <span><a href="#">Privacy Policy</a> · <a href="#">Terms of Use</a></span>
+  </div>
+</footer>
+
+<script>
+function toggleFAQ(btn) {
+  const item = btn.parentElement;
+  const isOpen = item.classList.contains('open');
+  document.querySelectorAll('.faq-item.open').forEach(i => i.classList.remove('open'));
+  if (!isOpen) item.classList.add('open');
+}
+
+// Smooth item hover effect with shadow
+document.querySelectorAll('.menu-item').forEach(item => {
+  item.addEventListener('mouseenter', () => {
+    item.style.boxShadow = '0 2px 12px rgba(232,96,10,0.1)';
+    item.style.borderRadius = '10px';
+    item.style.padding = '12px 8px';
+  });
+  item.addEventListener('mouseleave', () => {
+    item.style.boxShadow = '';
+    item.style.borderRadius = '';
+    item.style.padding = '12px 0';
+  });
+});
+
+// Simple shimmer loading simulation on page load
+window.addEventListener('load', () => {
+  document.querySelectorAll('.menu-item').forEach((item, i) => {
+    item.style.opacity = '0';
+    setTimeout(() => {
+      item.style.transition = 'opacity 0.3s ease';
+      item.style.opacity = '1';
+    }, i * 60);
+  });
+});
+</script>
+
+</body>
+</html>
